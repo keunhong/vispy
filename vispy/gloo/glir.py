@@ -14,6 +14,8 @@ import re
 import json
 import weakref
 from distutils.version import LooseVersion
+from OpenGL.GLES2.EXT.texture_filter_anisotropic import \
+    (GL_TEXTURE_MAX_ANISOTROPY_EXT, GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT)
 
 import numpy as np
 
@@ -1046,6 +1048,11 @@ class GlirTexture(GlirObject):
         min, mag = as_enum(min), as_enum(mag)
         if 'MIPMAP' in min.name or 'MIPMAP' in mag.name:
             self._mipmap_levels = mipmap_levels
+            max_aniso = gl.glGetParameter(
+                GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT)
+            gl.glTexParameterf(self._target,
+                               GL_TEXTURE_MAX_ANISOTROPY_EXT,
+                               max_aniso)
         gl.glTexParameterf(self._target, gl.GL_TEXTURE_MIN_FILTER, min)
         gl.glTexParameterf(self._target, gl.GL_TEXTURE_MAG_FILTER, mag)
 
