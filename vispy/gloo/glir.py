@@ -1127,6 +1127,7 @@ class GlirTexture2D(GlirTexture):
         alignment = self._get_alignment(data.shape[-2]*data.shape[-1])
         if alignment != 4:
             gl.glPixelStorei(gl.GL_UNPACK_ALIGNMENT, alignment)
+
         if self._mipmap_levels and hasattr(gl, 'glTexStorage2D'):
             height, width = shape[-3:-1]
             gl.glTexStorage2D(self._target, self._mipmap_levels,
@@ -1287,9 +1288,16 @@ class GlirTextureCubeMap(GlirTexture):
         alignment = self._get_alignment(data.shape[-2] * data.shape[-1])
         if alignment != 4:
             gl.glPixelStorei(gl.GL_UNPACK_ALIGNMENT, alignment)
+
         # Upload
+        if self._mipmap_levels and hasattr(gl, 'glTexStorage2D'):
+            height, width = shape[-3:-1]
+            gl.glTexStorage2D(self._target, self._mipmap_levels,
+                            internalformat, width, height)
         for i, target in enumerate(self._cube_targets):
             gl.glTexSubImage2D(target, 0, x, y, format, gtype, data[i])
+        if self._mipmap_levels:
+            gl.glGenerateMipmap(self._target)
         # Set alignment back
         if alignment != 4:
             gl.glPixelStorei(gl.GL_UNPACK_ALIGNMENT, 4)

@@ -649,9 +649,10 @@ class TextureCubeMap(BaseTexture):
 
     def __init__(self, data=None, format=None, resizable=True,
                  interpolation=None, wrapping=None, shape=None,
-                 internalformat=None, resizeable=None):
+                 internalformat=None, resizeable=None, mipmap_levels=8):
         BaseTexture.__init__(self, data, format, resizable, interpolation,
-                             wrapping, shape, internalformat, resizeable)
+                             wrapping, shape, internalformat, resizeable,
+                             mipmap_levels=mipmap_levels)
 
     @property
     def width(self):
