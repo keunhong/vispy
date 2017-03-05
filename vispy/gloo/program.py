@@ -126,7 +126,7 @@ class Program(GLObject):
         if self._count > 0:
             dtype = []
             for kind, type_, name, size in self._code_variables.values():
-                if kind == 'attribute':
+                if kind == 'attribute' or kind == 'in':
                     dt, numel = self._gtypes[type_]
                     dtype.append((name, dt, numel))
             self._buffer = np.zeros(self._count, dtype=dtype)
@@ -202,7 +202,7 @@ class Program(GLObject):
         
         # Parse uniforms, attributes and varyings
         self._code_variables = {}
-        for kind in ('uniform', 'attribute', 'varying', 'const'):
+        for kind in ('uniform', 'attribute', 'varying', 'const', 'in'):
             regex = re.compile(var_regexp.replace('VARIABLE', kind),
                                flags=re.MULTILINE)
             for m in re.finditer(regex, code):
@@ -335,7 +335,7 @@ class Program(GLObject):
                 self._user_variables[name] = data
                 self._glir.command('UNIFORM', self._id, name, type_, data)
             
-            elif kind == 'attribute':
+            elif kind == 'attribute' or kind == 'in':
                 # Is this a constant value per vertex
                 is_constant = False
 
