@@ -615,9 +615,9 @@ def read_pixels(viewport=None, format='rgba', out_type='unsigned_byte'):
     viewport : array-like | None
         4-element list of x, y, w, h parameters. If None (default),
         the current GL viewport will be queried and used.
-    alpha : bool
-        If True (default), the returned array has 4 elements (RGBA).
-        If False, it has 3 (RGB).
+    format : str
+        Can be 'rgba', 'rgb' or 'depth'. The returned array have 4 elements if
+        'rgba', 3 elements if 'rgb', and 1 element if 'depth'.
     out_type : str | dtype
         Can be 'unsigned_byte' or 'float'. Note that this does not
         use casting, but instead determines how values are read from
