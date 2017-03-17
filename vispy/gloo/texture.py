@@ -83,6 +83,8 @@ class BaseTexture(GLObject):
         ('rgb', 3),
         ('rgba', 4),
         ('depth_component', 1),
+        ('depth_component16', 1),
+        ('depth_component32_oes', 1),
     ])
 
     def __init__(self, data=None, format=None, resizable=True,

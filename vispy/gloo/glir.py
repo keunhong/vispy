@@ -48,7 +48,10 @@ _internalformats = [
     gl.Enum('GL_RGBA8', 32856),
     gl.Enum('GL_RGBA16', 32859),
     gl.Enum('GL_RGBA16F', 34842),
-    gl.Enum('GL_RGBA32F', 34836)
+    gl.Enum('GL_RGBA32F', 34836),
+    gl.Enum('GL_DEPTH_COMPONENT', 6402),
+    gl.Enum('GL_DEPTH_COMPONENT16', 33189),
+    gl.Enum('GL_DEPTH_COMPONENT32_OES', 33191),
 ]
 _internalformats = dict([(enum.name, enum) for enum in _internalformats])
 
@@ -1046,6 +1049,7 @@ class GlirTexture(GlirObject):
                                gl.GL_TEXTURE_WRAP_S, wrapping[-2])
         gl.glTexParameterf(self._target, gl.GL_TEXTURE_WRAP_T, wrapping[-1])
 
+
     def set_interpolation(self, min, mag, mipmap_levels):
         self.activate()
         min, mag = as_enum(min), as_enum(mag)
@@ -1115,8 +1119,12 @@ class GlirTexture2D(GlirTexture):
         if (shape, format, internalformat) != self._shape_formats:
             self._shape_formats = shape, format, internalformat
             self.activate()
+            if internalformat == gl.GL_DEPTH_COMPONENT16:
+                tex_type = gl.GL_UNSIGNED_INT
+            else:
+                tex_type = gl.GL_UNSIGNED_BYTE
             gl.glTexImage2D(self._target, 0, internalformat, format,
-                            gl.GL_UNSIGNED_BYTE, shape[:2])
+                            tex_type, shape[:2])
 
     def set_data(self, offset, data):
         self.activate()
